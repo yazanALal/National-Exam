@@ -42,13 +42,7 @@ class DatabaseSeeder extends Seeder
         // AnswerExamQuestion::factory(600)->create();
         // Favorite::factory(1000)->create();
 
-        Admin::create([
-            'password'=>Hash::make('12345678'),
-            'name'=>'Admin',
-            'email'=>'admin@gmail.com',
-            'uuid'=>Str::uuid()
-        ]
-        );
+        
         
     }
 }
