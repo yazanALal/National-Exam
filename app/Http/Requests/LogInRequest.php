@@ -39,5 +39,13 @@ class LogInRequest extends FormRequest
         throw new HttpResponseException($this->apiResponse(null, null, false, ErrorsResource::make($validator->errors()), 422));
     }
 
+    public function messages()
+    {
+
+        return [
+            
+            'code.exists' =>'خطأ في الكود او الاسم'
+        ];
+    } 
     
 }

@@ -57,33 +57,25 @@ trait FileUploader
      */
     public function uploadImage($request, $name, $inputName = 'image')
     {
-        $requestFile = $request->file($inputName);
         try {
-            // $dir = 'public/images/'.$name;
-             $dir = 'public/images/'.$name;
-            $fixName = time() . '.' . $requestFile->extension();
-
-
+            $requestFile = $request->file($inputName);
+            $dir = 'images/' . $name;
+            $fileName = null;
 
             if ($requestFile) {
                 $extension = $requestFile->getClientOriginalExtension();
                 $fileName = time() . '_' . Str::random(8) . '.' . $extension;
-                $filePath = $requestFile->storeAs($dir, $fileName);
-                $imageUrl = Storage::url("$filePath");
 
-                // $data->update([
-                //     $inputName => $request->image,
-                // ]);
+                $path = $requestFile->move(public_path('storage/' . $dir), $fileName);
+                $fileName = $path->getFilename();
             }
 
-            return $imageUrl;
+            return $fileName;
         } catch (\Throwable $th) {
             report($th);
-
             return $th->getMessage();
         }
     }
-
     public function uploadPhoto($request, $data, $name)
     {
         try {
@@ -113,7 +105,7 @@ trait FileUploader
 
 
 
-    public function uploadMultiImage($request, $name='sliders', $inputName = 'images')
+    public function uploadMultiImage($request, $name = 'sliders', $inputName = 'images')
     {
         // Ensure the request has the files for the given input name
         // if (!$request->hasFile($inputName)) {
@@ -129,8 +121,8 @@ trait FileUploader
         }
 
         $uploadedImages = [];
-        $dir = 'public/images/' . $name;
-      
+        $dir = 'images/' . $name;
+
         foreach ($requestFiles as $file) {
 
 
@@ -138,10 +130,9 @@ trait FileUploader
 
                 $extension = $file->getClientOriginalExtension();
                 $fileName = time() . '_' . Str::random(8) . '.' . $extension;
-                $filePath = $file->storeAs($dir, $fileName);
-                $imageUrl = Storage::url("$filePath");
+                $path = $file->move(public_path('storage/' . $dir), $fileName);
                 $uploadedImages[] = [
-                    'url' => $imageUrl,
+                    'url' => $fileName,
                 ];
             }
         }
@@ -149,6 +140,8 @@ trait FileUploader
         // Return array of uploaded images URLs
         return $uploadedImages;
     }
+}
+
 
    
-}
+
